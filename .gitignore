@@ -89,14 +89,4 @@ ENV/
 
 # Rope project settings
 .ropeproject
-
-
 .idea/
-__init__.py
-apis/
-bitsite/
-charts/
-db.sqlite3
-manage.py
-requirements.txt
-task/
