@@ -1,6 +1,6 @@
 from apis.huobi.api import HuobiAPI
 from apis.okcoin.api import OkAPI
-from charts.models import OKCoinSpot
+from charts.models import OKCoinSpot, HuobiSpot
 from django.shortcuts import render_to_response, HttpResponse
 
 apikey = '668ac363-c3d0-4dee-b6f5-3f237de5878a'
@@ -14,8 +14,13 @@ def test_data(request, method=['GET', 'POST']):
     res = ok_api.ticker()
     okcoin = OKCoinSpot(date_stamp=res['date'], sell=res['ticker']['sell'], buy=res['ticker']['buy'],
                         last=res['ticker']['last'], vol=res['ticker']['vol'], high=res['ticker']['high'],
-                        low=res['ticker']['low'])
+                        low=res['ticker']['low'], symbol='btccny')
     okcoin.save()
+    res = huobi_api.ticker()
+    huobi = HuobiSpot(date_stamp=res['time'], sell=res['ticker']['sell'], buy=res['ticker']['buy'],
+                        last=res['ticker']['last'], vol=res['ticker']['vol'], high=res['ticker']['high'],
+                        low=res['ticker']['low'], symbol='btccny')
+    huobi.save()
     # return render_to_response('charts/index.html')
     return HttpResponse('hello')
 

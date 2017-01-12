@@ -14,3 +14,16 @@ class OKCoinSpot(models.Model):
     low = models.FloatField()
     sell = models.FloatField()
     vol = models.FloatField()
+    symbol = models.CharField(max_length=20, null=True)
+
+
+class HuobiSpot(models.Model):
+    date_stamp = models.FloatField()
+    date_local = models.DateTimeField(null=True)
+    buy = models.FloatField()
+    high = models.FloatField()
+    last = models.FloatField()
+    low = models.FloatField()
+    sell = models.FloatField()
+    vol = models.FloatField()
+    symbol = models.CharField(max_length=20, null=True)
