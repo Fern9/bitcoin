@@ -2,14 +2,8 @@ import json
 import time, datetime
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from apis.huobi.api import HuobiAPI
-from apis.okcoin.api import OkAPI
 
-apikey = '668ac363-c3d0-4dee-b6f5-3f237de5878a'
-secretkey = 'E8A0BCE0B732927FAC30ADFAAE460232'
-
-ok_api = OkAPI(apikey, secretkey)
-huobi_api = HuobiAPI(apikey, secretkey)
+from apis import ok_api, huobi_api
 
 
 def home(request):
@@ -30,7 +24,7 @@ def get_ticker(request):
         "t": str_time,
         "ok": value_ok,
         "huo": value_huobi,
-        "diff": value_ok - value_huobi
+        "diff": value_huobi - value_ok
     }
 
     return HttpResponse(json.dumps({

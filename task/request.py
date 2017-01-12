@@ -8,8 +8,7 @@ from gevent.pool import Group
 
 if 'threading' in sys.modules:
     del sys.modules['threading']
-monkey.patch_all()
-
+monkey.patch_all(socket=True, dns=True, time=True, select=True,thread=False, os=True, ssl=True, httplib=False, aggressive=True)
 
 class ConcurrentRequest:
     def __init__(self):
@@ -17,7 +16,7 @@ class ConcurrentRequest:
         self.ans = []
         self.grs = []
 
-    def add(self, func, args):
+    def add(self, func, args=()):
         g = gevent.spawn(func, *args)
         self.grs.append(g)
         self.group.add(g)
@@ -37,7 +36,6 @@ if __name__ == '__main__':
     creq = ConcurrentRequest()
     for i in xrange(200):
         creq.add(req, ('https://baidu.com',))
-
 
     ans = creq.start(200)
     e = time()
