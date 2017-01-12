@@ -15,3 +15,16 @@ class OkAPI(BaseHTTPs):
                 symbol: symbol
             }
         return self.get(url, params)
+
+    def kline(self, symbol='btc_cny', type='1min', size=None, since=None):
+        url = "%s/api/v1/kline.do" % self.RESTURL
+        params = {}
+        if symbol:
+            params['symbol'] = symbol
+        if type:
+            params['type'] = type
+        if size:
+            params['size'] = size
+        if since:
+            params['since'] = since
+        return self.get(url, params)

@@ -1,9 +1,7 @@
 import json
-import time
-
+import time, datetime
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-
 from apis.huobi.api import HuobiAPI
 from apis.okcoin.api import OkAPI
 
@@ -40,3 +38,6 @@ def get_ticker(request):
         "msg": '',
         "data": data
     }))
+
+
+
