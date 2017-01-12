@@ -3,10 +3,10 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def schedule(id, func, start_date):
-    url = "sqlite:///task.sqlite"
-    
+    # url = "sqlite:///task.sqlite"
+
     scheduler = BackgroundScheduler(daemonic=False)
-    scheduler.add_jobstore("sqlalchemy", url=url)
+    # scheduler.add_jobstore("sqlalchemy", url=url)
     scheduler.add_job(func, "interval", seconds=1, id=id, start_date=start_date)
     scheduler.start()
     return scheduler
