@@ -1,3 +1,5 @@
+import sys
+sys.path.append('..')
 import env
 from time import sleep
 
