@@ -1,6 +1,7 @@
 import json
 import thread
 import websocket
+import ssl
 from gevent import sleep
 
 
@@ -33,7 +34,7 @@ class WS:
         print "## open ##"
 
     def start(self):
-        self.ws.run_forever()
+        self.ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
 
     def asyc_start(self):
         thread.start_new_thread(self.start, ())
@@ -43,12 +44,23 @@ class WS:
             data = json.dumps(data)
         self.ws.send(data)
 
-
+'''
 if __name__ == '__main__':
     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-    ws.asyc_start()
+    ws.start()
     print 'end'
     index = 0
     while True:
         sleep(5)
         print 'sleep 5'
+'''
+
+if __name__ == '__main__':
+    ws = WS('wss://hq.huobi.com:80')
+    ws.start()
+    print 'end'
+    index = 0
+    while True:
+        sleep(5)
+        print 'sleep 5'
+
