@@ -44,16 +44,16 @@ class WS:
             data = json.dumps(data)
         self.ws.send(data)
 
-'''
-if __name__ == '__main__':
-    ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-    ws.start()
-    print 'end'
-    index = 0
-    while True:
-        sleep(5)
-        print 'sleep 5'
-'''
+
+# if __name__ == '__main__':
+#     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
+#     ws.asyc_start()
+#     print 'end'
+#     index = 0
+#     while True:
+#         sleep(5)
+#         print 'sleep 5'
+
 
 if __name__ == '__main__':
     ws = WS('wss://hq.huobi.com:80')
