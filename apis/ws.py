@@ -44,23 +44,33 @@ class WS:
             data = json.dumps(data)
         self.ws.send(data)
 
-'''
-if __name__ == '__main__':
-    ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-    ws.start()
-    print 'end'
-    index = 0
-    while True:
-        sleep(5)
-        print 'sleep 5'
-'''
+
+# if __name__ == '__main__':
+#     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
+#     ws.start()
+#     print 'end'
+
 
 if __name__ == '__main__':
-    ws = WS('wss://hq.huobi.com:80')
-    ws.start()
-    print 'end'
-    index = 0
-    while True:
-        sleep(5)
-        print 'sleep 5'
+    def open(ws):
+        print 'send---'
+        ws.send({
+            'version': 1,
+            'msgType': 'reqSymbolList',
+        })
 
+
+    # ws = WS('wss://hq.huobi.com/websocket/ooUNulSc43H0xwKnT10i')
+    # ws.on_open = open
+
+    # ws.asyc_start()
+    ws = websocket.create_connection("wss://hq.huobi.com", subprotocols=["binary", "base64"])
+    result = ws.recv()
+    print result
+    # ws.send()
+    while True:
+        sleep(0.2)
+        # open(ws)
+        sleep(10)
+
+    print 'end'
