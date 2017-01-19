@@ -47,17 +47,13 @@ class WS:
 
 # if __name__ == '__main__':
 #     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-<<<<<<< HEAD
 #     ws.asyc_start()
 #     print 'end'
 #     index = 0
 #     while True:
 #         sleep(5)
 #         print 'sleep 5'
-=======
-#     ws.start()
-#     print 'end'
->>>>>>> 1d3edc68cd899a30cb18a940778041c7c564834c
+
 
 
 if __name__ == '__main__':

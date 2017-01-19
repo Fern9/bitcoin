@@ -9,6 +9,7 @@ from apis import ok_api, huobi_api
 from charts.models import OKCoinSpot, HuobiSpot, Config
 from task.schedule import schedule
 from apis.ws import WS
+from huobi_client import StreamingClient
 
 
 def get_okcoin_from_ws():
@@ -32,7 +33,6 @@ def get_okcoin_from_ws():
             }
         okcoin = OKCoinSpot(**ok_datas)
         okcoin.save()
-        #TODO
         print 'message:', message
         data = json.loads(message)
         self.on_message(ws, data)
@@ -41,6 +41,28 @@ def get_okcoin_from_ws():
     ws.on_open = on_okcoin_open
     ws._on_message = _on_okcoin_message()
     ws.asyc_start()
+
+def get_huobi_from_ws():
+
+    def _on_huobi_message(data):
+        data = data['payload']
+        huobi_datas = {
+                'date_stamp': data,
+                'date_time': datetime.fromtimestamp(data),
+                'buy': data,
+                'high': data['priceHigh'],
+                'last': data,
+                'low': data['priceLow'],
+                'sell': data,
+                'vol': data['totalVolume'],
+                'symbol': 'btccny'
+            }
+        huobi = HuobiSpot(**huobi_datas)
+        huobi.save()
+        print(data)
+    sclient = StreamingClient()
+    sclient.subscribe('marketOverview')
+    sclient.connect(_on_huobi_message())
 
 
 
