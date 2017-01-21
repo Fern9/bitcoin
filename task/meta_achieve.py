@@ -4,6 +4,7 @@ sys.path.append('..')
 import env
 from time import sleep
 from datetime import datetime
+import  time
 from task.request import ConcurrentRequest
 from apis import ok_api, huobi_api
 from charts.models import OKCoinSpot, HuobiSpot, Config
@@ -45,21 +46,22 @@ def get_okcoin_from_ws():
 def get_huobi_from_ws():
 
     def _on_huobi_message(data):
-        data = data['payload']
-        huobi_datas = {
-                'date_stamp': data,
-                'date_time': datetime.fromtimestamp(data),
-                'buy': data,
-                'high': data['priceHigh'],
-                'last': data,
-                'low': data['priceLow'],
-                'sell': data,
-                'vol': data['totalVolume'],
-                'symbol': 'btccny'
-            }
-        huobi = HuobiSpot(**huobi_datas)
-        huobi.save()
-        print(data)
+        if 'payload' in data:
+            data = data['payload']
+            timestamp = time.time()
+            huobi_datas = {
+                    'date_stamp': timestamp,
+                    'date_time': datetime.fromtimestamp(timestamp),
+                    'buy': data['priceBid'],
+                    'high': data['priceHigh'],
+                    'last': data['priceNew'],
+                    'low': data['priceLow'],
+                    'sell': data['priceAsk'],
+                    'vol': data['totalAmount'],
+                    'symbol': 'btccny'
+                }
+            huobi = HuobiSpot(**huobi_datas)
+            huobi.save()
     sclient = StreamingClient()
     sclient.subscribe('marketOverview')
     sclient.connect(_on_huobi_message())
