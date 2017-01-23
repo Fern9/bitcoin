@@ -40,7 +40,7 @@ def get_okcoin_from_ws():
 
     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
     ws.on_open = on_okcoin_open
-    ws._on_message = _on_okcoin_message()
+    ws._on_message = _on_okcoin_message
     ws.asyc_start()
 
 def get_huobi_from_ws():
@@ -110,12 +110,18 @@ def get_market():
 
 if __name__ == '__main__':
 
-    sch = schedule('get_market', get_market, '2017-01-13 01:19:00')
+    # sch = schedule('get_market', get_market, '2017-01-13 01:19:00')
+    sch_ok = schedule('get_okcoin_ws', get_okcoin_from_ws, '2017-01-23 01:19:00')
+    sch_huobi = schedule('get_huobi_ws', get_okcoin_from_ws, '2017-01-23 01:19:00')
     while True:
         run = Config.objects.filter(key='get_market_run').first().value
         if int(run):
-            if sch.state != 1:
-                sch.resume()
+            print(sch_ok.state)
+            if sch_ok.state != 1:
+                sch_ok.resume()
+            if sch_huobi.state != 1:
+                sch_huobi.resume()
             sleep(1)
         else:
-            sch.pause()
+            sch_ok.pause()
+            sch_huobi.pause()
