@@ -45,37 +45,41 @@ class WS:
         self.ws.send(data)
 
 
-# if __name__ == '__main__':
-#     ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-#     ws.asyc_start()
-#     print 'end'
-#     index = 0
-#     while True:
-#         sleep(5)
-#         print 'sleep 5'
-
-
-
 if __name__ == '__main__':
-    def open(ws):
-        print 'send---'
-        ws.send({
-            'version': 1,
-            'msgType': 'reqSymbolList',
-        })
-
-
-    # ws = WS('wss://hq.huobi.com/websocket/ooUNulSc43H0xwKnT10i')
-    # ws.on_open = open
-
+    ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
+    ws.start()
     # ws.asyc_start()
-    ws = websocket.create_connection("wss://hq.huobi.com", subprotocols=["binary", "base64"])
-    result = ws.recv()
-    print result
-    # ws.send()
-    while True:
-        sleep(0.2)
-        # open(ws)
-        sleep(10)
+    # print 'end'
+    # index = 0
+    # while True:
+    #     sleep(1)
+    #     if index == 0:
+    #         ws.send({'event': 'addChannel', 'channel': 'ok_btccny_ticker'})
+    #     index += 1
+    #     print 'sleep 1'
 
-    print 'end'
+
+
+# if __name__ == '__main__':
+#     def open(ws):
+#         print 'send---'
+#         ws.send({
+#             'version': 1,
+#             'msgType': 'reqSymbolList',
+#         })
+#
+#
+#     # ws = WS('wss://hq.huobi.com/websocket/ooUNulSc43H0xwKnT10i')
+#     # ws.on_open = open
+#
+#     # ws.asyc_start()
+#     ws = websocket.create_connection("wss://hq.huobi.com", subprotocols=["binary", "base64"])
+#     result = ws.recv()
+#     print result
+#     # ws.send()
+#     while True:
+#         sleep(0.2)
+#         # open(ws)
+#         sleep(10)
+#
+#     print 'end'
