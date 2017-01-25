@@ -4,7 +4,7 @@ sys.path.append('..')
 import env
 from time import sleep
 from datetime import datetime
-import  time
+import time
 from task.request import ConcurrentRequest
 from apis import ok_api, huobi_api
 from charts.models import OKCoinSpot, HuobiSpot, Config
@@ -13,17 +13,16 @@ from apis.ws import WS
 from huobi_client import StreamingClient
 
 
-def get_okcoin_from_ws():
-    def on_okcoin_open(self, ws):
-        ws.send("{'event':'addChannel','channel':'ok_btccny_ticker'}")
-        print "## open ##"
-
-    def _on_okcoin_message(self, ws, message):
-        message = message[0]
+class OK_ws(WS):
+    def on_open(self, ws):
+        self.send({'event': 'addChannel', 'channel': 'ok_btccny_ticker'})
+    def on_message(self, ws, data):
+        print '#ok message#'
+        message = data[0]
         if 'data' in message:
             ok_datas = {
                 'date_stamp': float(message['data']['timestamp']),
-                'date_time': datetime.fromtimestamp(float(message['data']['timestamp'])),
+                'date_time': datetime.fromtimestamp(float(message['data']['timestamp'])/1000.0),
                 'buy': message['data']['buy'],
                 'high': message['data']['high'],
                 'last': message['data']['last'],
@@ -32,41 +31,41 @@ def get_okcoin_from_ws():
                 'vol': message['data']['vol'],
                 'symbol': 'btccny'
             }
-        okcoin = OKCoinSpot(**ok_datas)
-        okcoin.save()
-        print 'message:', message
-        data = json.loads(message)
-        self.on_message(ws, data)
+            okcoin = OKCoinSpot(**ok_datas)
+            # okcoin.save()
 
-    ws = WS('wss://real.okcoin.cn:10440/websocket/okcoinapi')
-    ws.on_open = on_okcoin_open
-    ws._on_message = _on_okcoin_message
+def get_okcoin_from_ws():
+    ws = OK_ws('wss://real.okcoin.cn:10440/websocket/okcoinapi')
+    # ws.on_open = on_okcoin_open
     ws.asyc_start()
 
-def get_huobi_from_ws():
 
+
+
+def get_huobi_from_ws():
     def _on_huobi_message(data):
+        print '#huobi message#'
         if 'payload' in data:
             data = data['payload']
             timestamp = time.time()
             huobi_datas = {
-                    'date_stamp': timestamp,
-                    'date_time': datetime.fromtimestamp(timestamp),
-                    'buy': data['priceBid'],
-                    'high': data['priceHigh'],
-                    'last': data['priceNew'],
-                    'low': data['priceLow'],
-                    'sell': data['priceAsk'],
-                    'vol': data['totalAmount'],
-                    'symbol': 'btccny'
-                }
+                'date_stamp': timestamp,
+                'date_time': datetime.fromtimestamp(timestamp),
+                'buy': data['priceBid'],
+                'high': data['priceHigh'],
+                'last': data['priceNew'],
+                'low': data['priceLow'],
+                'sell': data['priceAsk'],
+                'vol': data['totalAmount'],
+                'symbol': 'btccny'
+            }
             huobi = HuobiSpot(**huobi_datas)
-            huobi.save()
+            # huobi.save()
+        print data
+
     sclient = StreamingClient()
     sclient.subscribe('marketOverview')
-    sclient.connect(_on_huobi_message())
-
-
+    sclient.connect(_on_huobi_message)
 
 
 def get_market():
@@ -105,23 +104,11 @@ def get_market():
             'symbol': 'btccny'
         }
         huobi = HuobiSpot(**huobi_datas)
-        huobi.save()
+        # huobi.save()
 
 
 if __name__ == '__main__':
 
-    # sch = schedule('get_market', get_market, '2017-01-13 01:19:00')
-    sch_ok = schedule('get_okcoin_ws', get_okcoin_from_ws, '2017-01-23 01:19:00')
-    sch_huobi = schedule('get_huobi_ws', get_okcoin_from_ws, '2017-01-23 01:19:00')
-    while True:
-        run = Config.objects.filter(key='get_market_run').first().value
-        if int(run):
-            print(sch_ok.state)
-            if sch_ok.state != 1:
-                sch_ok.resume()
-            if sch_huobi.state != 1:
-                sch_huobi.resume()
-            sleep(1)
-        else:
-            sch_ok.pause()
-            sch_huobi.pause()
+    get_okcoin_from_ws()
+    get_huobi_from_ws()
+    # get_huobi_from_ws()
